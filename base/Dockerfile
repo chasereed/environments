@@ -17,6 +17,7 @@ WORKDIR /build
 RUN useradd cosmo && mkdir /home/cosmo/ && chown cosmo:cosmo /home/cosmo && adduser cosmo staff
 
 # search for packages here: https://packages.debian.org/index
+# python packages: https://packages.debian.org/bullseye/python/
 # r packages: https://packages.debian.org/bullseye/gnu-r/
 # Do not need to run apt-get upgrade when using official images
 #   see https://github.com/docker-library/official-images/pull/13443#issuecomment-1297829291
@@ -29,6 +30,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         gfortran \
         git \
         julia \
+        jupyter \
+        jupyter-notebook \
         less \
         libc6 \
         libstdc++6 \
@@ -38,7 +41,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         openssh-client \
         openssh-server \
         pandoc \
-        python-minimal \
         python3 \
         python3-dev \
         python3-matplotlib \
@@ -76,14 +78,18 @@ RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
 ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 
-
-RUN python3 -m pip install \
-    jupyterlab \
-    radian
-
+# install the R jupyter kernel
 RUN R -e "IRkernel::installspec(user = FALSE)"
 
 # switch back to root if you need to extend image
 USER cosmo
 
 CMD ["/bin/bash"]
+
+
+# to create an interactive shell:
+# docker run -it --rm -v chasestolworthy/base /bin/bash
+
+# to start jupyter lab
+# docker run -it --rm -p 8888:8888 -v $(pwd):/workspace -w /workspace chasestolworthy/base jupyter notebook --ip 0.0.0.0
+
