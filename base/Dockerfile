@@ -3,6 +3,8 @@
 # - everything for a dev container (vs code or github codespaces)
 # - everything for a basic python or r project (ideally use debian packages)
 # - everything to run jupyter notebooks 
+# - easy to customize a r or python environments 
+# - try not to use conda (conda can burn!)
 
 FROM debian:bullseye
 
@@ -92,4 +94,13 @@ CMD ["/bin/bash"]
 
 # to start jupyter lab
 # docker run -it --rm -p 8888:8888 -v $(pwd):/workspace -w /workspace chasestolworthy/base jupyter notebook --ip 0.0.0.0
+
+# explained:
+# -it creates an interactive terminal 
+# --rm removes the container when it exits
+# -p host:container maps a port
+# -v host:container maps a volume, in this case the current directory to /workspace
+# -w sets the working directory
+# chasestolworthy/base is the image name
+# jupyter notebook --ip 0.0.0 is the command to run in the container 
 
